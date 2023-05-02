@@ -1,5 +1,6 @@
 package hello.springmvc.basic.request;
 
+import hello.springmvc.basic.HelloData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.rmi.activation.ActivationGroup;
 import java.util.Map;
 
 @Slf4j
@@ -69,12 +71,11 @@ public class RequestParamController {
     }
 
     /**
-     * @RequestParam.required
-     * /request-param-required -> username이 없으므로 예외
-     *
+     * @RequestParam.required /request-param-required -> username이 없으므로 예외
+     * <p>
      * 주의!
      * /request-param-required?username= -> 빈문자로 통과
-     *
+     * <p>
      * 주의!
      * /request-param-required
      * int age -> null을 int에 입력하는 것은 불가능, 따라서 Integer 변경해야 함(또는 다음에 나오는 defaultValue 사용)
@@ -89,9 +90,8 @@ public class RequestParamController {
     }
 
     /**
-     * @RequestParam
-     * - defaultValue 사용
-     *
+     * @RequestParam - defaultValue 사용
+     * <p>
      * 참고: defaultValue는 빈 문자의 경우에도 적용
      * /request-param-default?username=
      */
@@ -113,6 +113,19 @@ public class RequestParamController {
     @RequestMapping("/request-param-map")
     public String requestParamMap(@RequestParam Map<String, Object> paramMap) {
         log.info("username={}, age={}", paramMap.get("username"), paramMap.get("age"));
+        return "ok";
+    }
+
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1")
+    public String modelAttrivuteV1(@RequestParam String username, @RequestParam int age) {
+        HelloData helloData = new HelloData();
+        helloData.setUsername(username);
+        helloData.setAge(age);
+
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+        log.info("helloData={}", helloData);
+
         return "ok";
     }
 }
